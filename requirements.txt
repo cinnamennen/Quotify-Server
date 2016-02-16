@@ -31,5 +31,4 @@ jaraco.logging==1.2
 jaraco.text==1.4
 jaraco.timing==1.1.5
 Jinja2==2.8
-langid==1.1.5
 lxml==3.4.4
