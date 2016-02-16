@@ -3,7 +3,6 @@ backports.functools-lru-cache==1.0.3
 backports.ssl-match-hostname==3.4.0.2
 beautifulsoup4==4.4.0
 blinker==1.4
-calebBot==0.1.0
 coverage==4.0.3
 decorator==4.0.2
 feedparser==5.2.1
