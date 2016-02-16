@@ -37,7 +37,6 @@ markovify==0.2.1
 MarkupSafe==0.23
 microsofttranslator==0.7
 more-itertools==2.2
-numpy==1.10.4
 pbr==1.8.1
 ply==3.8
 praw==3.2.1
