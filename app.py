@@ -71,57 +71,60 @@ def get_tasks():
 @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['GET'])
 # @auth.login_required
 def get_task(task_id):
-    task = filter(lambda t: t['id'] == task_id, tasks)
-    if len(task) == 0:
+    if len(tasks) == 0:
         abort(404)
     randnum = random.randrange(0, len(tasks), 1)
-    print "Trying + " + str(randnum)
+    print "Trying " + str(randnum)
     try:
-        return jsonify(task[randnum])
+        return jsonify(tasks[randnum])
     except IndexError:
         sys.stderr.write("Bad index: " + str(randnum))
 
-    @app.route('/todo/api/v1.0/tasks', methods=['POST'])
-    @auth.login_required
-    def create_task():
-        if not request.json or not 'title' in request.json:
-            abort(400)
-        task = {
-            'id': tasks[-1]['id'] + 1,
-            'title': request.json['title'],
-            'description': request.json.get('description', ""),
-            'done': False
-        }
-        tasks.append(task)
-        return jsonify({'task': make_public_task(task)}), 201
 
-    @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
-    @auth.login_required
-    def update_task(task_id):
-        task = filter(lambda t: t['id'] == task_id, tasks)
-        if len(task) == 0:
-            abort(404)
-        if not request.json:
-            abort(400)
-        if 'title' in request.json and type(request.json['title']) != unicode:
-            abort(400)
-        if 'description' in request.json and type(request.json['description']) is not unicode:
-            abort(400)
-        if 'done' in request.json and type(request.json['done']) is not bool:
-            abort(400)
-        task[0]['title'] = request.json.get('title', task[0]['title'])
-        task[0]['description'] = request.json.get('description', task[0]['description'])
-        task[0]['done'] = request.json.get('done', task[0]['done'])
-        return jsonify({'task': make_public_task(task[0])})
+@app.route('/todo/api/v1.0/tasks', methods=['POST'])
+@auth.login_required
+def create_task():
+    if not request.json or not 'title' in request.json:
+        abort(400)
+    task = {
+        'id': tasks[-1]['id'] + 1,
+        'title': request.json['title'],
+        'description': request.json.get('description', ""),
+        'done': False
+    }
+    tasks.append(task)
+    return jsonify({'task': make_public_task(task)}), 201
 
-    @app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['DELETE'])
-    @auth.login_required
-    def delete_task(task_id):
-        task = filter(lambda t: t['id'] == task_id, tasks)
-        if len(task) == 0:
-            abort(404)
-        tasks.remove(task[0])
-        return jsonify({'result': True})
 
-    if __name__ == '__main__':
-        app.run(host='0.0.0.0', port=5000, debug=True)
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['PUT'])
+@auth.login_required
+def update_task(task_id):
+    task = filter(lambda t: t['id'] == task_id, tasks)
+    if len(task) == 0:
+        abort(404)
+    if not request.json:
+        abort(400)
+    if 'title' in request.json and type(request.json['title']) != unicode:
+        abort(400)
+    if 'description' in request.json and type(request.json['description']) is not unicode:
+        abort(400)
+    if 'done' in request.json and type(request.json['done']) is not bool:
+        abort(400)
+    task[0]['title'] = request.json.get('title', task[0]['title'])
+    task[0]['description'] = request.json.get('description', task[0]['description'])
+    task[0]['done'] = request.json.get('done', task[0]['done'])
+    return jsonify({'task': make_public_task(task[0])})
+
+
+@app.route('/todo/api/v1.0/tasks/<int:task_id>', methods=['DELETE'])
+@auth.login_required
+def delete_task(task_id):
+    task = filter(lambda t: t['id'] == task_id, tasks)
+    if len(task) == 0:
+        abort(404)
+    tasks.remove(task[0])
+    return jsonify({'result': True})
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000, debug=True)
